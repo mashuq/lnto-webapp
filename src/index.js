@@ -3,9 +3,17 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import Auth from './Auth/Auth';
 import * as serviceWorker from './serviceWorker';
+import Authenticator from './API/Authenticator'
+import Dashboard from './Dashboard/Dashboard'
 
-ReactDOM.render(<Auth />, document.getElementById('root'));
-
+(async () => {
+    let userLoggedIn = await Authenticator.isUserLoggedIn();
+    if(userLoggedIn){
+        ReactDOM.render(<Dashboard />, document.getElementById('root'));
+    }else{
+        ReactDOM.render(<Auth />, document.getElementById('root'));
+    }
+})();
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA

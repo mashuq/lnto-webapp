@@ -1,9 +1,8 @@
 import React from 'react';
-import './Auth.css';
 import 'semantic-ui-css/semantic.min.css'
-import Login from './Login.js'
-import Register from './Login.js'
+import Login from './Login'
 import Registration from './Registration';
+import Authenticator from '../API/Authenticator'
 
 class Auth extends React.Component {
   loginInformation = {
@@ -18,11 +17,11 @@ class Auth extends React.Component {
   }
 
   login(loginInfo){
-    console.log(loginInfo);
+    Authenticator.loginUser(loginInfo);
   }
 
   register(registrationInfo){
-    console.log(registrationInfo);
+    Authenticator.registerUser(registrationInfo);
   }
 
   renderLogin(loginInfo){
@@ -30,7 +29,7 @@ class Auth extends React.Component {
   }
 
   renderRegistration(registrationInfo){
-    return <Registration value={registrationInfo} onClick={()=>this.login(registrationInfo)}/>;    
+    return <Registration value={registrationInfo} onClick={()=>this.register(registrationInfo)}/>;    
   }
 
   render() {
