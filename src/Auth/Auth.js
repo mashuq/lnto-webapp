@@ -3,33 +3,37 @@ import 'semantic-ui-css/semantic.min.css'
 import Login from './Login'
 import Registration from './Registration';
 import Authenticator from '../API/Authenticator'
+//import PasswordValidator from '../API/PasswordValidator'
 
 class Auth extends React.Component {
-  loginInformation = {
-    username: null,
-    password: null, 
-  }
-
-  registrationInformation = {
-    username: null,
-    password: null, 
-    repassword: null, 
-  }
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }  
 
   login(loginInfo){
-    Authenticator.loginUser(loginInfo);
+    console.log("there");    
+    console.log(loginInfo);    
   }
 
-  register(registrationInfo){
-    Authenticator.registerUser(registrationInfo);
+  async register(registrationComponent, registrationInformation, setPositiveMessage, setNegativeMessage){
+    Authenticator.registerUser(registrationInformation).then(
+      result => {
+        registrationComponent[setPositiveMessage](result.data.message);
+      },
+      error => {
+        registrationComponent[setNegativeMessage](error.response.data.message);
+      }
+    );
   }
 
-  renderLogin(loginInfo){
-    return <Login value={loginInfo} onClick={()=>this.login(loginInfo)}/>;    
+  renderLogin(){
+    return <Login onClick={(loginInfo)=>this.login(loginInfo)}/>;    
   }
 
-  renderRegistration(registrationInfo){
-    return <Registration value={registrationInfo} onClick={()=>this.register(registrationInfo)}/>;    
+  renderRegistration(){
+    return <Registration onClick={(registrationComponent, registrationInformation, setPositiveMessage, setNegativeMessage)=>
+      this.register(registrationComponent, registrationInformation, setPositiveMessage, setNegativeMessage)}/>;    
   }
 
   render() {
@@ -41,12 +45,12 @@ class Auth extends React.Component {
         </div>
         <div class="eight wide column">
           <h2 class="ui header">Please Login</h2>
-          {this.renderLogin(this.loginInformation)}
+          {this.renderLogin()}
         </div>
 
         <div class="eight wide column">
         <h2 class="ui header">Please Register</h2>
-          {this.renderRegistration(this.registrationInformation)}
+          {this.renderRegistration()}
         </div>
       </div>
       

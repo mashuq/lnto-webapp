@@ -2,7 +2,7 @@ import axios from 'axios';
 
 let config = {
     headers: {
-        "Origin":"http://localhost:3000",
+        "Origin": "http://localhost:3000",
     }
 }
 
@@ -15,7 +15,7 @@ Authenticator.isUserLoggedIn = async function () {
         return false;
     }
     try {
-        let result = await axios.post("http://localhost:8080/verifyToken", {}, Object.assign({"x-access-token": user.token}, config));
+        let result = await axios.post("http://localhost:8080/verifyToken", {}, Object.assign({ "x-access-token": user.token }, config));
         console.log(result);
         return false;
     } catch (error) {
@@ -37,16 +37,8 @@ Authenticator.loginUser = async function (loginInformation) {
 
 }
 
-Authenticator.registerUser = async function (registrationInformation) {
-    try {
-        let result = await axios.post("http://localhost:8080/createUser", registrationInformation, config);
-        console.log(result);
-        return false;
-    } catch (error) {
-        console.log(error);
-        return false;
-    }
-
+Authenticator.registerUser = function (registrationInformation) {
+    return axios.post("http://localhost:8080/createUser", registrationInformation, config);
 }
 
 export default Authenticator;

@@ -1,47 +1,99 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css'
+import { Form, Input, Button, Message } from 'semantic-ui-react';
 
-class Registration extends React.Component{
-    constructor(props) {
-      super(props);
-      this.handleInputChange = this.handleInputChange.bind(this);
+let registrationInformation = {
+  username: null,
+  password: null,
+  repassword: null,
+  usernameNegativeMessage: null,
+  passwordNegativeMessage: null,
+  repasswordNegativeMessage: null,
+  positiveMessage: null,
+  negativeMessage: null,
+}
+
+class Registration extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = registrationInformation;
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+    this.setState({ [name]: value });
+  }
+
+  setPositiveMessage(positiveMessage){
+    this.setState({positiveMessage: positiveMessage});
+  }
+
+  setNegativeMessage(negativeMessage){
+    this.setState({negativeMessage: negativeMessage});
+  }
+
+  submitRegistration() {
+    this.setState({usernameNegativeMessage: null});
+    this.setState({passwordNegativeMessage: null});
+    this.setState({repasswordNegativeMessage: null});
+    this.setState({negativeMessage: null});
+    this.setState({positiveMessage: null});
+
+    let valid = true;
+    if(null == this.state.username){
+      this.setState({usernameNegativeMessage: "Username cannot be null"});
+      valid = false;
     }
-  
-    handleInputChange(event) {
-      const target = event.target;
-      const value = target.type === 'checkbox' ? target.checked : target.value;
-      const name = target.name;
-      this.props.value[name] = value;
+
+    if(null == this.state.password){
+      this.setState({passwordNegativeMessage: "Password cannot be null"});
+      valid = false;
     }
-  
-    render(){
-      return(
-        <form class="ui large form">
-        <div class="ui stacked segment">
-          <div class="field">
-            <div class="ui left icon input">
-              <i class="user icon"></i>
-              <input type="text" name="username" placeholder="Username" defaultValue={this.props.value.username} onChange={this.handleInputChange}/>
-            </div>
-          </div>
-          <div class="field">
-            <div class="ui left icon input">
-              <i class="lock icon"></i>
-              <input type="password" name="password" placeholder="Password" defaultValue={this.props.value.password} onChange={this.handleInputChange}/>
-            </div>
-          </div>
-          <div class="field">
-            <div class="ui left icon input">
-              <i class="lock icon"></i>
-              <input type="password" name="repassword" placeholder="Re-Type Password" defaultValue={this.props.value.repassword} onChange={this.handleInputChange}/>
-            </div>
-          </div>
-          <div class="ui fluid large teal submit button" onClick={() => this.props.onClick()}>Register</div>
-        </div>
-        <div class="ui error message"></div>
-      </form>
-      );
+
+    if(null == this.state.repassword){
+      this.setState({repasswordNegativeMessage: "Re-Type Password cannot be null"});
+      valid = false;
+    }
+    
+    if(this.state.password !== this.state.repassword){
+      this.setState({negativeMessage: "Password do not match with Re-Typed Password"});
+      valid = false;
+    }   
+
+    if(valid){
+      this.props.onClick(this, this.state, this.setPositiveMessage.name, this.setNegativeMessage.name);
     }
   }
 
-  export default Registration;
+  render() {
+    return (
+      <Form className="ui large form">
+        <div class="ui stacked segment">
+          <Form.Field>
+            <Input type="text" name="username" placeholder="Username" defaultValue={this.state.username}
+              onChange={this.handleInputChange} iconPosition="left" icon="user" />
+            <Message negative className={`${this.state.usernameNegativeMessage ? 'visible' : 'hidden'}`} content={this.state.usernameNegativeMessage} />
+          </Form.Field>
+          <Form.Field>
+            <Input type="password" name="password" placeholder="Password" defaultValue={this.state.password}
+              onChange={this.handleInputChange} iconPosition="left" icon="lock" />
+            <Message negative className={`${this.state.passwordNegativeMessage ? 'visible' : 'hidden'}`} content={this.state.passwordNegativeMessage} />  
+          </Form.Field>
+          <Form.Field>
+            <Input type="password" name="repassword" placeholder="Re-Type Password" defaultValue={this.state.repassword}
+              onChange={this.handleInputChange} iconPosition="left" icon="lock" />
+            <Message negative className={`${this.state.repasswordNegativeMessage ? 'visible' : 'hidden'}`} content={this.state.repasswordNegativeMessage} />  
+          </Form.Field>
+          <Button fluid className="teal" onClick={() => this.submitRegistration()}>Register</Button>
+        </div>
+        <div className={`ui negative message ${this.state.negativeMessage ? 'visible' : 'hidden'}`} >{this.state.negativeMessage}</div>
+        <div className={`ui positive message ${this.state.positiveMessage ? 'visible' : 'hidden'}`} >{this.state.positiveMessage}</div>
+      </Form>
+    );
+  }
+}
+
+export default Registration;

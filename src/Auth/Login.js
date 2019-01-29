@@ -1,41 +1,54 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css'
+import { Form, Input, Message } from 'semantic-ui-react';
 
-class Login extends React.Component{
-    constructor(props) {
-      super(props);
-      this.handleInputChange = this.handleInputChange.bind(this);
-    }
-  
-    handleInputChange(event) {
-      const target = event.target;
-      const value = target.type === 'checkbox' ? target.checked : target.value;
-      const name = target.name;
-      this.props.value[name] = value;
-    }
-  
-    render(){
-      return(
-        <form class="ui large form">
+let loginInformation = {
+  username: null,
+  password: null, 
+  positiveMessage: null,
+  negativeMessage: null,  
+}
+
+class Login extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = loginInformation;
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;    
+    this.setState({[name]: value});
+  }
+
+  submitLogin(){
+    
+    this.props.onClick(this.state);
+  }
+
+  render() {
+    return (
+      <Form className="ui large form">
         <div class="ui stacked segment">
           <div class="field">
             <div class="ui left icon input">
-              <i class="user icon"></i>
-              <input type="text" name="username" placeholder="Username" defaultValue={this.props.value.username} onChange={this.handleInputChange}/>
+              <Input type="text" name="username" placeholder="Username" defaultValue={this.state.username}
+                onChange={this.handleInputChange} iconPosition="left" icon="user" />
             </div>
           </div>
           <div class="field">
             <div class="ui left icon input">
-              <i class="lock icon"></i>
-              <input type="password" name="password" placeholder="Password" defaultValue={this.props.value.password} onChange={this.handleInputChange}/>
+              <Input type="password" name="password" placeholder="Password" defaultValue={this.state.password}
+                onChange={this.handleInputChange} iconPosition="left" icon="lock" />
             </div>
           </div>
-          <div class="ui fluid large teal submit button" onClick={() => this.props.onClick()}>Login</div>
-        </div>
-        <div class="ui error message"></div>
-      </form>
-      );
-    }
+          <div class="ui fluid large teal submit button" onClick={() => this.submitLogin()}>Login</div>
+        </div>        
+      </Form>
+    );
   }
+}
 
-  export default Login;
+export default Login;
