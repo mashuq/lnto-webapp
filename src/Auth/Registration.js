@@ -1,6 +1,6 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css'
-import { Form, Input, Button, Message } from 'semantic-ui-react';
+import { Form, Input, Button, Message, Segment } from 'semantic-ui-react';
 
 let registrationInformation = {
   username: null,
@@ -71,7 +71,7 @@ class Registration extends React.Component {
   render() {
     return (
       <Form className="ui large form">
-        <div class="ui stacked segment">
+        <Segment>
           <Form.Field>
             <Input type="text" name="username" placeholder="Username" defaultValue={this.state.username}
               onChange={this.handleInputChange} iconPosition="left" icon="user" />
@@ -88,9 +88,9 @@ class Registration extends React.Component {
             <Message negative className={`${this.state.repasswordNegativeMessage ? 'visible' : 'hidden'}`} content={this.state.repasswordNegativeMessage} />  
           </Form.Field>
           <Button fluid className="teal" onClick={() => this.submitRegistration()}>Register</Button>
-        </div>
-        <div className={`ui negative message ${this.state.negativeMessage ? 'visible' : 'hidden'}`} >{this.state.negativeMessage}</div>
-        <div className={`ui positive message ${this.state.positiveMessage ? 'visible' : 'hidden'}`} >{this.state.positiveMessage}</div>
+        </Segment>
+        <Message negative className={`${this.state.negativeMessage ? 'visible' : 'hidden'}`} >{this.state.negativeMessage}</Message>
+        <Message positive className={`${this.state.positiveMessage ? 'visible' : 'hidden'}`} >{this.state.positiveMessage}</Message>
       </Form>
     );
   }

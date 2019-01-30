@@ -1,12 +1,14 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css'
-import { Form, Input, Message } from 'semantic-ui-react';
+import { Form, Input, Button, Message, Segment } from 'semantic-ui-react';
+
 
 let loginInformation = {
   username: null,
-  password: null, 
-  positiveMessage: null,
-  negativeMessage: null,  
+  password: null,
+  usernameNegativeMessage: null,
+  passwordNegativeMessage: null,
+  negativeMessage: null,
 }
 
 class Login extends React.Component {
@@ -23,30 +25,50 @@ class Login extends React.Component {
     this.setState({[name]: value});
   }
 
+  setNegativeMessage(negativeMessage){
+    this.setState({negativeMessage: negativeMessage});
+  }
+
   submitLogin(){
-    
-    this.props.onClick(this.state);
+    this.setState({usernameNegativeMessage: null});
+    this.setState({passwordNegativeMessage: null});
+    this.setState({negativeMessage: null});
+
+    let valid = true;
+    if(null == this.state.username){
+      this.setState({usernameNegativeMessage: "Username cannot be null"});
+      valid = false;
+    }
+
+    if(null == this.state.password){
+      this.setState({passwordNegativeMessage: "Password cannot be null"});
+      valid = false;
+    }
+
+    if(valid){
+      this.props.onClick(this, this.state, this.setNegativeMessage.name);
+    }
   }
 
   render() {
     return (
       <Form className="ui large form">
-        <div class="ui stacked segment">
-          <div class="field">
-            <div class="ui left icon input">
-              <Input type="text" name="username" placeholder="Username" defaultValue={this.state.username}
-                onChange={this.handleInputChange} iconPosition="left" icon="user" />
-            </div>
-          </div>
-          <div class="field">
-            <div class="ui left icon input">
-              <Input type="password" name="password" placeholder="Password" defaultValue={this.state.password}
-                onChange={this.handleInputChange} iconPosition="left" icon="lock" />
-            </div>
-          </div>
-          <div class="ui fluid large teal submit button" onClick={() => this.submitLogin()}>Login</div>
-        </div>        
-      </Form>
+      <Segment>
+        <Form.Field>
+          <Input type="text" name="username" placeholder="Username" defaultValue={this.state.username}
+            onChange={this.handleInputChange} iconPosition="left" icon="user" />
+          <Message negative className={`${this.state.usernameNegativeMessage ? 'visible' : 'hidden'}`} content={this.state.usernameNegativeMessage} />
+        </Form.Field>
+        <Form.Field>
+          <Input type="password" name="password" placeholder="Password" defaultValue={this.state.password}
+            onChange={this.handleInputChange} iconPosition="left" icon="lock" />
+          <Message negative className={`${this.state.passwordNegativeMessage ? 'visible' : 'hidden'}`} content={this.state.passwordNegativeMessage} />  
+        </Form.Field>
+        <Button fluid className="teal" onClick={() => this.submitLogin()}>Login</Button>
+      </Segment>
+      <Message negative className={`${this.state.negativeMessage ? 'visible' : 'hidden'}`} >{this.state.negativeMessage}</Message>
+      <Message positive className={`${this.state.positiveMessage ? 'visible' : 'hidden'}`} >{this.state.positiveMessage}</Message>
+    </Form>
     );
   }
 }

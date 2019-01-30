@@ -3,57 +3,63 @@ import 'semantic-ui-css/semantic.min.css'
 import Login from './Login'
 import Registration from './Registration';
 import Authenticator from '../API/Authenticator'
-//import PasswordValidator from '../API/PasswordValidator'
+import { Grid, Header } from 'semantic-ui-react';
+
 
 class Auth extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-  }  
-
-  login(loginInfo){
-    console.log("there");    
-    console.log(loginInfo);    
   }
 
-  async register(registrationComponent, registrationInformation, setPositiveMessage, setNegativeMessage){
-    Authenticator.registerUser(registrationInformation).then(
-      result => {
-        registrationComponent[setPositiveMessage](result.data.message);
-      },
-      error => {
-        registrationComponent[setNegativeMessage](error.response.data.message);
-      }
-    );
+  async login(loginComponent, loginInformation, setNegativeMessage) {
+    try {
+      let result = await Authenticator.loginUser(loginInformation);
+      let isUserLoggedIn = await Authenticator.isUserLoggedIn();
+      console.log("isUserLoggedIn "+ isUserLoggedIn);
+    } catch (error) {
+      console.log(error);
+      loginComponent[setNegativeMessage](error);
+    }
   }
 
-  renderLogin(){
-    return <Login onClick={(loginInfo)=>this.login(loginInfo)}/>;    
+  async register(registrationComponent, registrationInformation, setPositiveMessage, setNegativeMessage) {
+    try {
+      let result = await Authenticator.registerUser(registrationInformation);
+      registrationComponent[setPositiveMessage](result);
+    } catch (error) {
+      registrationComponent[setNegativeMessage](error);
+    }
   }
 
-  renderRegistration(){
-    return <Registration onClick={(registrationComponent, registrationInformation, setPositiveMessage, setNegativeMessage)=>
-      this.register(registrationComponent, registrationInformation, setPositiveMessage, setNegativeMessage)}/>;    
+  renderLogin() {
+    return <Login onClick={(loginComponent, loginInformation, setNegativeMessage) =>
+      this.login(loginComponent, loginInformation, setNegativeMessage)} />;
+  }
+
+  renderRegistration() {
+    return <Registration onClick={(registrationComponent, registrationInformation, setPositiveMessage, setNegativeMessage) =>
+      this.register(registrationComponent, registrationInformation, setPositiveMessage, setNegativeMessage)} />;
   }
 
   render() {
     return (
 
-      <div class="ui grid">
-        <div class="sixteen wide column">
-          <div class="ui huge header">Learn &amp; Teach Online</div>
-        </div>
-        <div class="eight wide column">
-          <h2 class="ui header">Please Login</h2>
+      <Grid>
+        <Grid.Column width="sixteen">
+          <Header size='huge'>Learn &amp; Teach Online</Header>
+        </Grid.Column>
+        <Grid.Column width="eight">
+          <Header as='h2'>Please Login</Header>
           {this.renderLogin()}
-        </div>
+        </Grid.Column >
 
-        <div class="eight wide column">
-        <h2 class="ui header">Please Register</h2>
+        <Grid.Column width="eight">
+        <Header as='h2'>Please Login</Header>
           {this.renderRegistration()}
-        </div>
-      </div>
-      
+        </Grid.Column >
+      </Grid>
+
     );
   }
 }
