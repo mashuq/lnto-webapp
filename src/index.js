@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import Auth from './Auth/Auth';
 import * as serviceWorker from './serviceWorker';
-import Authenticator from './API/Authenticator'
-import Dashboard from './Dashboard/Dashboard'
+import Authenticator from './API/Authenticator';
+import Dashboard from './Dashboard/Dashboard';
 
 (async () => {
     let userLoggedIn = await Authenticator.isUserLoggedIn();

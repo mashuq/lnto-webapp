@@ -4,6 +4,8 @@ import Login from './Login'
 import Registration from './Registration';
 import Authenticator from '../API/Authenticator'
 import { Grid, Header } from 'semantic-ui-react';
+import Dashboard from '../Dashboard/Dashboard';
+import ReactDOM from 'react-dom';
 
 
 class Auth extends React.Component {
@@ -16,9 +18,12 @@ class Auth extends React.Component {
     try {
       let result = await Authenticator.loginUser(loginInformation);
       let isUserLoggedIn = await Authenticator.isUserLoggedIn();
-      console.log("isUserLoggedIn "+ isUserLoggedIn);
+      if(isUserLoggedIn){
+        ReactDOM.render(<Dashboard />, document.getElementById('root'));
+      }else{
+        loginComponent[setNegativeMessage]('Some error occurred. Please try again later.');
+      }
     } catch (error) {
-      console.log(error);
       loginComponent[setNegativeMessage](error);
     }
   }
