@@ -11,9 +11,8 @@ class SideMenu extends React.Component {
         const { activeItem } = this.state
         return (  
             <Menu vertical>
-            <Menu.Item name='inbox' active={activeItem === 'inbox'} onClick={this.handleItemClick}>
-              <Label color='teal'>1</Label>
-              Inbox
+            <Menu.Item name='Profile' active={activeItem === 'profile'} onClick={this.handleItemClick}>
+              Profile
             </Menu.Item>
     
             <Menu.Item name='spam' active={activeItem === 'spam'} onClick={this.handleItemClick}>
